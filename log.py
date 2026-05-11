@@ -8,12 +8,12 @@ from config import settings
 STOP = settings.stop
 LOGGING_LEVEL = settings.logging_level
 
-def configure_queue_logger(log_queue: mp.Queue) -> logging.Logger:
+def configure_queue_logger(name, log_queue: mp.Queue) -> logging.Logger:
     """
     This logger does not write to console directly.
     It sends all log records to the multiprocessing.Queue.
     """
-    logger = logging.getLogger("queue_logger")
+    logger = logging.getLogger(name.strip('_'))
     logger.setLevel(LOGGING_LEVEL)
     logger.propagate = False
 
@@ -42,8 +42,9 @@ def configure_console_logger() -> logging.Logger:
     console_handler.setLevel(LOGGING_LEVEL)
 
     formatter = logging.Formatter(
-        fmt="%(asctime)s | %(processName)s | %(levelname)s | %(name)s | %(message)s",
-        datefmt="%H:%M:%S",
+#        fmt="%(asctime)s | %(processName)s | %(levelname)s | %(message)s",
+        fmt="%(asctime)s.%(msecs)03d | %(processName)s | %(name)s | %(levelname)s | %(message)s",
+        datefmt="%Y-%m-%d_%H:%M:%S",
     )
     console_handler.setFormatter(formatter)
 
