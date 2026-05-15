@@ -8,7 +8,9 @@ from config import settings
 STOP = settings.stop
 LOGGING_LEVEL = settings.logging_level
 
-def configure_queue_logger(name, log_queue: mp.Queue) -> logging.Logger:
+global log_queue
+
+def configure_queue_logger(name) -> logging.Logger:
     """
     This logger does not write to console directly.
     It sends all log records to the multiprocessing.Queue.
@@ -20,7 +22,7 @@ def configure_queue_logger(name, log_queue: mp.Queue) -> logging.Logger:
     # Avoid duplicate handlers if this is called more than once
     logger.handlers.clear()
 
-    queue_handler = logging.handlers.QueueHandler(log_queue)
+    queue_handler = logging.handlers.QueueHandler()
     queue_handler.setLevel(LOGGING_LEVEL)
 
     logger.addHandler(queue_handler)
